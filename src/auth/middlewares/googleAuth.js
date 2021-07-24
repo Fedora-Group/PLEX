@@ -6,7 +6,7 @@ const { OAuth2Client } = require('google-auth-library');
 const CLIENT_ID = process.env.CLIENT_ID;
 const client = new OAuth2Client(CLIENT_ID);
 module.exports = async (req, res, next) => {
-  let token = req.cookies['session-token'];
+  let token = req.body.token;
 
   let user = {};
   async function verify() {
@@ -38,8 +38,6 @@ module.exports = async (req, res, next) => {
         res.cookie('username', document.username.split('@')[0]);
       } else {
         let user = new UserModel(obj); //news
-
-
         const userRecord = await user.save(); //news
         res.cookie('token', userRecord.token);
         res.cookie('username', userRecord.username.split('@')[0]);

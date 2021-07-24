@@ -90,6 +90,27 @@ router.post('/ctreatRoom', isLogged, createRoom);
 router.get('/:id', isLogged, roomValidator, checkOwner, roomHandler);
 router.get('/p/:id', isLogged, privatRoomValidator, checkOwner, roomHandler);
 
+router.post('/googleLogin', (req, res,next) => {
+
+  let token = req.body.token;
+  async function verify() {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const userid = payload['sub'];
+  }
+  verify()
+    .then(() => {
+      googleAuth(req, res, next);
+        })
+    .catch(console.error);
+});
+
+
+
+
 function rootHandler(req, res) {
   res.send('root is working');
 }
